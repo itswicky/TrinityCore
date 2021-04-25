@@ -1669,7 +1669,7 @@ struct TalentEntry
     //std::array<uint32, 2> PrereqTalentUnused;             // 14-15
     uint32 PrereqRank;                                      // 16
     //std::array<uint32, 2> PrereqRankUnused;               // 17-18
-    //uint32 Flags;                                         // 19
+    uint32 Flags;                                           // 19
     //uint32 RequiredSpellID;                               // 20 all 0
     //std::array<uint32, 2> CategoryMask;                   // 21 its a 64 bit mask for pet 1<<CategoryEnumID in CreatureFamily.dbc
 };

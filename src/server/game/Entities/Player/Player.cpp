@@ -25290,6 +25290,22 @@ void Player::LearnTalent(uint32 talentId, uint32 talentRank)
         }
     }
 
+    // Check if it is exclusive with another talent
+    if (talentInfo->Flags >= 2)
+    {
+        // loop through all talents
+        for (uint32 i = 0; i < sTalentStore.GetNumRows(); i++)
+            if (TalentEntry const* tmpTalent = sTalentStore.LookupEntry(i))
+                // check if talent has a flags value of 2 or greater
+                if (tmpTalent->Flags >= 2)
+                    // check if we already know a spell with flags value 2 or greater
+                    if (HasSpell(tmpTalent->SpellRank[0]))
+                    {
+                        GetSession()->SendNotification("You may only have one specialization selected at a time.");
+                        return;
+                    }
+    }
+
     // Find out how many points we have in this field
     uint32 spentPoints = 0;
 
@@ -25303,8 +25319,12 @@ void Player::LearnTalent(uint32 talentId, uint32 talentRank)
                             if (HasSpell(tmpTalent->SpellRank[rank]))
                                 spentPoints += (rank + 1);
 
-    // not have required min points spent in talent tree
-    if (spentPoints < (talentInfo->TierID * MAX_TALENT_RANK))
+    // not have required min points spent in talent tree - custom check for 1 point per tier
+    if (spentPoints < (talentInfo->TierID * (MAX_TALENT_RANK - 4)))
+        return;
+
+    // custom check for only 1 talent per tier
+    if (spentPoints >= ((talentInfo->TierID) + 1))
         return;
 
     // spell not set in talent.dbc
