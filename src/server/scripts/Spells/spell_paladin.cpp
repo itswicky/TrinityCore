@@ -139,7 +139,17 @@ enum PaladinSpells
     SPELL_PALADIN_RETRIBUTION_AURA_R7            = 54043,
     SPELL_PALADIN_REPENTANCE                     = 20066,
     SPELL_PALADIN_SEAL_OF_COMMAND                = 20375,
-    SPELL_PALADIN_SANCTIFIED_WRATH_CUSTOM        = 81006
+    SPELL_PALADIN_VENGEANCE_REDUX                = 81003,
+    SPELL_PALADIN_ART_OF_WAR_REDUX               = 81004,
+    SPELL_PALADIN_JUDGEMENTS_OF_THE_WISE_REDUX   = 81005,
+    SPELL_PALADIN_SANCTIFIED_WRATH_REDUX         = 81006,
+    SPELL_PALADIN_FANATICISM_REDUX               = 81007,
+    SPELL_PALADIN_SHEATH_OF_LIGHT_REDUX          = 81008,
+    SPELL_PALADIN_RIGHTEOUS_VENGEANCE_REDUX      = 81009,
+    SPELL_PALADIN_IMPROVED_JUDGEMENTS_REDUX      = 81010,
+    SPELL_PALADIN_CONVICTION_REDUX               = 81011,
+    SPELL_PALADIN_SANCTITY_OF_BATTLE_R1_REDUX    = 81012,
+    SPELL_PALADIN_SANCTITY_OF_BATTLE_R2_REDUX    = 81013
 };
 
 enum PaladinSpellIcons
@@ -338,7 +348,7 @@ class spell_pal_avenging_wrath : public SpellScriptLoader
                 }
 
                 // Check custom Sanctified Wrath to apply damage reduction bypass effect
-                if (AuraEffect const* sanctifiedWrathAurEff = target->GetAuraEffectOfRankedSpell(SPELL_PALADIN_SANCTIFIED_WRATH_CUSTOM, EFFECT_2))
+                if (AuraEffect const* sanctifiedWrathAurEff = target->GetAuraEffectOfRankedSpell(SPELL_PALADIN_SANCTIFIED_WRATH_REDUX, EFFECT_2))
                 {
                     CastSpellExtraArgs args(sanctifiedWrathAurEff);
                     args.AddSpellMod(SPELLVALUE_BASE_POINT0, sanctifiedWrathAurEff->GetAmount())
@@ -2480,6 +2490,17 @@ public:
             caster->RemoveSpell(SPELL_PALADIN_RETRIBUTION_AURA_R5);
             caster->RemoveSpell(SPELL_PALADIN_RETRIBUTION_AURA_R6);
             caster->RemoveSpell(SPELL_PALADIN_RETRIBUTION_AURA_R7);
+            caster->RemoveSpell(SPELL_PALADIN_VENGEANCE_REDUX);
+            caster->RemoveSpell(SPELL_PALADIN_ART_OF_WAR_REDUX);
+            caster->RemoveSpell(SPELL_PALADIN_JUDGEMENTS_OF_THE_WISE_REDUX);
+            caster->RemoveSpell(SPELL_PALADIN_SANCTIFIED_WRATH_REDUX);
+            caster->RemoveSpell(SPELL_PALADIN_FANATICISM_REDUX);
+            caster->RemoveSpell(SPELL_PALADIN_SHEATH_OF_LIGHT_REDUX);
+            caster->RemoveSpell(SPELL_PALADIN_RIGHTEOUS_VENGEANCE_REDUX);
+            caster->RemoveSpell(SPELL_PALADIN_IMPROVED_JUDGEMENTS_REDUX);
+            caster->RemoveSpell(SPELL_PALADIN_CONVICTION_REDUX);
+            caster->RemoveSpell(SPELL_PALADIN_SANCTITY_OF_BATTLE_R1_REDUX);
+            caster->RemoveSpell(SPELL_PALADIN_SANCTITY_OF_BATTLE_R2_REDUX);
         }
 
         void Register() override
