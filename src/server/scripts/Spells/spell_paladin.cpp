@@ -138,7 +138,8 @@ enum PaladinSpells
     SPELL_PALADIN_RETRIBUTION_AURA_R6            = 27150,
     SPELL_PALADIN_RETRIBUTION_AURA_R7            = 54043,
     SPELL_PALADIN_REPENTANCE                     = 20066,
-    SPELL_PALADIN_SEAL_OF_COMMAND                = 20375
+    SPELL_PALADIN_SEAL_OF_COMMAND                = 20375,
+    SPELL_PALADIN_SANCTIFIED_WRATH_CUSTOM        = 81006
 };
 
 enum PaladinSpellIcons
@@ -329,6 +330,15 @@ class spell_pal_avenging_wrath : public SpellScriptLoader
             {
                 Unit* target = GetTarget();
                 if (AuraEffect const* sanctifiedWrathAurEff = target->GetAuraEffectOfRankedSpell(SPELL_PALADIN_SANCTIFIED_WRATH_TALENT_R1, EFFECT_2))
+                {
+                    CastSpellExtraArgs args(sanctifiedWrathAurEff);
+                    args.AddSpellMod(SPELLVALUE_BASE_POINT0, sanctifiedWrathAurEff->GetAmount())
+                        .AddSpellMod(SPELLVALUE_BASE_POINT1, sanctifiedWrathAurEff->GetAmount());
+                    target->CastSpell(target, SPELL_PALADIN_SANCTIFIED_WRATH, args);
+                }
+
+                // Check custom Sanctified Wrath to apply damage reduction bypass effect
+                if (AuraEffect const* sanctifiedWrathAurEff = target->GetAuraEffectOfRankedSpell(SPELL_PALADIN_SANCTIFIED_WRATH_CUSTOM, EFFECT_2))
                 {
                     CastSpellExtraArgs args(sanctifiedWrathAurEff);
                     args.AddSpellMod(SPELLVALUE_BASE_POINT0, sanctifiedWrathAurEff->GetAmount())
