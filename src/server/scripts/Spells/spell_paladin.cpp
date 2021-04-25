@@ -127,7 +127,18 @@ enum PaladinSpells
     SPELL_PALADIN_ENDURING_JUDGEMENT             = 40472,
 
     SPELL_PALADIN_GLYPH_OF_HOLY_LIGHT_HEAL       = 54968,
-    SPELL_PALADIN_HOLY_MENDING                   = 64891
+    SPELL_PALADIN_HOLY_MENDING                   = 64891,
+
+    SPELL_PALADIN_CRUSADER_STRIKE                = 35395,
+    SPELL_PALADIN_RETRIBUTION_AURA_R1            = 7294,
+    SPELL_PALADIN_RETRIBUTION_AURA_R2            = 10298,
+    SPELL_PALADIN_RETRIBUTION_AURA_R3            = 10299,
+    SPELL_PALADIN_RETRIBUTION_AURA_R4            = 10300,
+    SPELL_PALADIN_RETRIBUTION_AURA_R5            = 10301,
+    SPELL_PALADIN_RETRIBUTION_AURA_R6            = 27150,
+    SPELL_PALADIN_RETRIBUTION_AURA_R7            = 54043,
+    SPELL_PALADIN_REPENTANCE                     = 20066,
+    SPELL_PALADIN_SEAL_OF_COMMAND                = 20375
 };
 
 enum PaladinSpellIcons
@@ -2417,6 +2428,63 @@ class spell_pal_t8_2p_bonus : public SpellScriptLoader
         }
 };
 
+// Retribution Specialization
+class spell_pal_ret_spec : public SpellScriptLoader
+{
+public:
+    spell_pal_ret_spec() : SpellScriptLoader("spell_pal_ret_spec") { }
+
+    class spell_pal_ret_spec_AuraScript : public AuraScript
+    {
+        PrepareAuraScript(spell_pal_ret_spec_AuraScript);
+
+        bool Validate(SpellInfo const* /*spellInfo*/) override
+        {
+            return ValidateSpellInfo({ SPELL_PALADIN_CRUSADER_STRIKE });
+        }
+
+        void AfterApply(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
+        {
+            Player* caster = GetCaster()->ToPlayer();
+            if (!caster)
+                return;
+
+            if (!caster->HasSpell(SPELL_PALADIN_CRUSADER_STRIKE))
+                caster->LearnSpell(SPELL_PALADIN_CRUSADER_STRIKE, true);
+        }
+
+        void AfterRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
+        {
+            Player* caster = GetCaster()->ToPlayer();
+            if (!caster)
+                return;
+
+            caster->RemoveSpell(SPELL_PALADIN_CRUSADER_STRIKE);
+            caster->RemoveSpell(SPELL_PALADIN_REPENTANCE);
+            caster->RemoveSpell(SPELL_PALADIN_DIVINE_STORM);
+            caster->RemoveSpell(SPELL_PALADIN_SEAL_OF_COMMAND);
+            caster->RemoveSpell(SPELL_PALADIN_RETRIBUTION_AURA_R1);
+            caster->RemoveSpell(SPELL_PALADIN_RETRIBUTION_AURA_R2);
+            caster->RemoveSpell(SPELL_PALADIN_RETRIBUTION_AURA_R3);
+            caster->RemoveSpell(SPELL_PALADIN_RETRIBUTION_AURA_R4);
+            caster->RemoveSpell(SPELL_PALADIN_RETRIBUTION_AURA_R5);
+            caster->RemoveSpell(SPELL_PALADIN_RETRIBUTION_AURA_R6);
+            caster->RemoveSpell(SPELL_PALADIN_RETRIBUTION_AURA_R7);
+        }
+
+        void Register() override
+        {
+            AfterEffectApply += AuraEffectApplyFn(spell_pal_ret_spec_AuraScript::AfterApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+            AfterEffectRemove += AuraEffectRemoveFn(spell_pal_ret_spec_AuraScript::AfterRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        }
+    };
+
+    AuraScript* GetAuraScript() const override
+    {
+        return new spell_pal_ret_spec_AuraScript();
+    }
+};
+
 void AddSC_paladin_spell_scripts()
 {
     new spell_pal_ardent_defender();
@@ -2472,4 +2540,5 @@ void AddSC_paladin_spell_scripts()
     new spell_pal_sheath_of_light();
     new spell_pal_t3_6p_bonus();
     new spell_pal_t8_2p_bonus();
+    new spell_pal_ret_spec();
 }
