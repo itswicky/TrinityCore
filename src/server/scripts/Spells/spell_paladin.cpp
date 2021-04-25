@@ -1689,7 +1689,7 @@ class spell_pal_judgements_of_the_wise : public SpellScriptLoader
 
                 Unit* caster = eventInfo.GetActor();
                 caster->CastSpell(nullptr, SPELL_PALADIN_JUDGEMENTS_OF_THE_WISE_MANA, aurEff);
-                caster->CastSpell(nullptr, SPELL_REPLENISHMENT, aurEff);
+                //caster->CastSpell(nullptr, SPELL_REPLENISHMENT, aurEff);
             }
 
             void Register() override
