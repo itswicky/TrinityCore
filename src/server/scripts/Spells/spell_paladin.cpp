@@ -149,7 +149,8 @@ enum PaladinSpells
     SPELL_PALADIN_IMPROVED_JUDGEMENTS_REDUX      = 81010,
     SPELL_PALADIN_CONVICTION_REDUX               = 81011,
     SPELL_PALADIN_SANCTITY_OF_BATTLE_R1_REDUX    = 81012,
-    SPELL_PALADIN_SANCTITY_OF_BATTLE_R2_REDUX    = 81013
+    SPELL_PALADIN_SANCTITY_OF_BATTLE_R2_REDUX    = 81013,
+    SPELL_PALADIN_HOLY_AVENGER_PROC              = 81019
 };
 
 enum PaladinSpellIcons
@@ -2516,6 +2517,47 @@ public:
     }
 };
 
+// Holy Avenger proc
+class spell_pal_holy_avenger : public SpellScriptLoader
+{
+public:
+    spell_pal_holy_avenger() : SpellScriptLoader("spell_pal_holy_avenger") { }
+
+    class spell_pal_holy_avenger_AuraScript : public AuraScript
+    {
+        PrepareAuraScript(spell_pal_holy_avenger_AuraScript);
+
+
+        bool Validate(SpellInfo const* /*spellInfo*/) override
+        {
+            return ValidateSpellInfo({ SPELL_PALADIN_HOLY_AVENGER_PROC });
+        }
+
+        void OnProc(AuraEffect const* aurEff, ProcEventInfo& eventInfo)
+        {
+            PreventDefaultAction();
+            DamageInfo* damageInfo = eventInfo.GetDamageInfo();
+            if (!damageInfo || !damageInfo->GetDamage() || !damageInfo->GetVictim())
+                return;
+
+            int32 amount = CalculatePct(static_cast<int32>(damageInfo->GetDamage()), 10);
+            CastSpellExtraArgs args(aurEff);
+            args.AddSpellBP0(amount);
+            GetTarget()->CastSpell(eventInfo.GetProcTarget(), SPELL_PALADIN_HOLY_AVENGER_PROC, args);
+        }
+
+        void Register() override
+        {
+            OnEffectProc += AuraEffectProcFn(spell_pal_holy_avenger_AuraScript::OnProc, EFFECT_0, SPELL_AURA_DUMMY);
+        }
+    };
+
+    AuraScript* GetAuraScript() const override
+    {
+        return new spell_pal_holy_avenger_AuraScript();
+    }
+};
+
 void AddSC_paladin_spell_scripts()
 {
     new spell_pal_ardent_defender();
@@ -2571,5 +2613,8 @@ void AddSC_paladin_spell_scripts()
     new spell_pal_sheath_of_light();
     new spell_pal_t3_6p_bonus();
     new spell_pal_t8_2p_bonus();
+
+    // Redux
     new spell_pal_ret_spec();
+    new spell_pal_holy_avenger();
 }
