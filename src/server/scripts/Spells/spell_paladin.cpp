@@ -2533,22 +2533,28 @@ public:
             return ValidateSpellInfo({ SPELL_PALADIN_HOLY_AVENGER_PROC });
         }
 
-        void OnProc(AuraEffect const* aurEff, ProcEventInfo& eventInfo)
+        void HandleProc(AuraEffect const* aurEff, ProcEventInfo& eventInfo)
         {
             PreventDefaultAction();
+
             DamageInfo* damageInfo = eventInfo.GetDamageInfo();
             if (!damageInfo || !damageInfo->GetDamage() || !damageInfo->GetVictim())
                 return;
 
-            int32 amount = CalculatePct(static_cast<int32>(damageInfo->GetDamage()), 10);
+            Unit* caster = eventInfo.GetActor();
+            Unit* target = eventInfo.GetProcTarget();
+
+            SpellInfo const* spellInfo = sSpellMgr->AssertSpellInfo(SPELL_PALADIN_RIGHTEOUS_VENGEANCE_DAMAGE);
+            int32 amount = CalculatePct(static_cast<int32>(damageInfo->GetDamage()), aurEff->GetAmount());
+
             CastSpellExtraArgs args(aurEff);
             args.AddSpellBP0(amount);
-            GetTarget()->CastSpell(eventInfo.GetProcTarget(), SPELL_PALADIN_HOLY_AVENGER_PROC, args);
+            caster->CastSpell(target, SPELL_PALADIN_HOLY_AVENGER_PROC, args);
         }
 
         void Register() override
         {
-            OnEffectProc += AuraEffectProcFn(spell_pal_holy_avenger_AuraScript::OnProc, EFFECT_0, SPELL_AURA_DUMMY);
+            OnEffectProc += AuraEffectProcFn(spell_pal_holy_avenger_AuraScript::HandleProc, EFFECT_0, SPELL_AURA_DUMMY);
         }
     };
 
