@@ -1042,6 +1042,11 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage* damageInfo, int32 dama
 
                 if (CanApplyResilience())
                     Unit::ApplyResilience(victim, nullptr, &damage, crit, (attackType == RANGED_ATTACK ? CR_CRIT_TAKEN_RANGED : CR_CRIT_TAKEN_MELEE));
+
+                // Overpower
+                else if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT)
+                    AddPct(damage, 0.1f * ToPlayer()->GetOverpower());
+
                 break;
             }
             // Magical Attacks
@@ -1057,6 +1062,15 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage* damageInfo, int32 dama
 
                 if (CanApplyResilience())
                     Unit::ApplyResilience(victim, nullptr, &damage, crit, CR_CRIT_TAKEN_SPELL);
+
+                if (GetTypeId() == TYPEID_PLAYER)
+                {
+                    if (victim->GetTypeId() == TYPEID_PLAYER)
+                        break;
+                    else
+                        AddPct(damage, 0.1f * ToPlayer()->GetOverpower());
+                }
+
                 break;
             }
             default:
@@ -1368,6 +1382,15 @@ void Unit::CalculateMeleeDamage(Unit* victim, CalcDamageInfo* damageInfo, Weapon
         resilienceReduction = damageInfo->Damages[i].Damage - resilienceReduction;
         damageInfo->Damages[i].Damage -= resilienceReduction;
         damageInfo->CleanDamage += resilienceReduction;
+
+        // Overpower
+        int32 pvePowerReduction = damageInfo->Damages[i].Damage;
+        if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT)
+            AddPct(pvePowerReduction, 0.1f * ToPlayer()->GetOverpower());
+
+        pvePowerReduction = damageInfo->Damages[i].Damage - pvePowerReduction;
+        damageInfo->Damages[i].Damage -= pvePowerReduction;
+        damageInfo->CleanDamage += pvePowerReduction;
 
         // Calculate absorb resist
         if (int32(damageInfo->Damages[i].Damage) > 0)

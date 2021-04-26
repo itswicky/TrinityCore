@@ -889,6 +889,10 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
 
         void CleanupsBeforeDelete(bool finalCleanup = true) override;
 
+        void ChangeOverpower(int32 value, bool apply);
+        int32 GetOverpower() const { return m_overpower;  }
+        int32 m_overpower;
+
         void AddToWorld() override;
         void RemoveFromWorld() override;
 

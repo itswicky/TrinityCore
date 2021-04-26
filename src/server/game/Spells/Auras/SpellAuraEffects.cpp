@@ -5170,6 +5170,10 @@ void AuraEffect::HandlePeriodicDamageAurasTick(Unit* target, Unit* caster) const
         Unit::ApplyResilience(target, nullptr, &dmg, crit, CR_CRIT_TAKEN_SPELL);
     damage = dmg;
 
+    // Overpower
+    if (caster->GetTypeId() == TYPEID_PLAYER && target->GetTypeId() == TYPEID_UNIT) // Player deals damage to Unit
+        AddPct(dmg, 0.1f * caster->ToPlayer()->GetOverpower());
+
     DamageInfo damageInfo(caster, target, damage, GetSpellInfo(), GetSpellInfo()->GetSchoolMask(), DOT, BASE_ATTACK);
     Unit::CalcAbsorbResist(damageInfo);
     damage = damageInfo.GetDamage();

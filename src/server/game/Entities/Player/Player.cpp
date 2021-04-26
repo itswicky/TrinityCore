@@ -407,6 +407,8 @@ Player::Player(WorldSession* session): Unit(true)
     m_reputationMgr = new ReputationMgr(this);
 
     m_groupUpdateTimer.Reset(5000);
+
+    m_overpower = 0;
 }
 
 Player::~Player()
@@ -457,6 +459,14 @@ void Player::CleanupsBeforeDelete(bool finalCleanup)
     for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
         for (BoundInstancesMap::iterator itr = m_boundInstances[i].begin(); itr != m_boundInstances[i].end(); ++itr)
             itr->second.save->RemovePlayer(this);
+}
+
+void Player::ChangeOverpower(int32 value, bool apply)
+{
+    if (apply)
+        m_overpower += value;
+    else
+        m_overpower += value;
 }
 
 bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo)
@@ -7511,9 +7521,9 @@ void Player::_ApplyItemBonuses(ItemTemplate const* proto, uint8 slot, bool apply
             case ITEM_MOD_RANGED_ATTACK_POWER:
                 HandleStatFlatModifier(UNIT_MOD_ATTACK_POWER_RANGED, TOTAL_VALUE, float(val), apply);
                 break;
-//            case ITEM_MOD_FERAL_ATTACK_POWER:
-//                ApplyFeralAPBonus(int32(val), apply);
-//                break;
+            case ITEM_MOD_OVERPOWER:
+                ChangeOverpower(int32(val), apply);
+                break;
             case ITEM_MOD_MANA_REGENERATION:
                 ApplyManaRegenBonus(int32(val), apply);
                 break;
