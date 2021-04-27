@@ -4459,12 +4459,14 @@ class spell_gen_get_versatility : public AuraScript
 
         AuraEffect* aurEff0 = aurEff->GetBase()->GetEffect(EFFECT_0);
         uint32 amount = caster->GetOverpower();
+
         // debug
-        amount = 100;
+        if(amount > 1)
+            caster->GetSession()->SendNotification("this works");
 
         aurEff0->SetAmount(amount);
         //aurEff0->ChangeAmount(amount);
-        aurEff0->RecalculateAmount();
+        //aurEff0->RecalculateAmount();          
     }
 
     void Register() override

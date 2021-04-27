@@ -7454,8 +7454,8 @@ void Player::_ApplyItemBonuses(ItemTemplate const* proto, uint8 slot, bool apply
             case ITEM_MOD_CRIT_SPELL_RATING:
                 ApplyRatingMod(CR_CRIT_SPELL, int32(val), apply);
                 break;
-            case ITEM_MOD_HIT_TAKEN_MELEE_RATING:
-                ApplyRatingMod(CR_HIT_TAKEN_MELEE, int32(val), apply);
+            case ITEM_MOD_HIT_TAKEN_MELEE_RATING:                       
+                ChangeOverpower(int32(val), apply);  // ApplyRatingMod(CR_HIT_TAKEN_MELEE, int32(val), apply);
                 break;
             case ITEM_MOD_HIT_TAKEN_RANGED_RATING:
                 ApplyRatingMod(CR_HIT_TAKEN_RANGED, int32(val), apply);
@@ -7521,9 +7521,9 @@ void Player::_ApplyItemBonuses(ItemTemplate const* proto, uint8 slot, bool apply
             case ITEM_MOD_RANGED_ATTACK_POWER:
                 HandleStatFlatModifier(UNIT_MOD_ATTACK_POWER_RANGED, TOTAL_VALUE, float(val), apply);
                 break;
-            case ITEM_MOD_OVERPOWER:
-                ChangeOverpower(int32(val), apply);
-                break;
+            //case ITEM_MOD_OVERPOWER:
+            //    ChangeOverpower(int32(val), apply); / Old Feral Attack Power
+            //    break;
             case ITEM_MOD_MANA_REGENERATION:
                 ApplyManaRegenBonus(int32(val), apply);
                 break;
