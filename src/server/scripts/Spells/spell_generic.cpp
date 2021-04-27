@@ -4447,6 +4447,25 @@ class spell_gen_cannon_blast : public SpellScript
     }
 };
 
+class spell_gen_get_versatility : public AuraScript
+{
+    PrepareAuraScript(spell_gen_get_versatility);
+
+    void HandleEffectPeriodicUpdate(AuraEffect* aurEff)
+    {
+        if (Player* target = GetTarget()->ToPlayer())
+        {
+            uint32 amount = target->GetOverpower();
+            aurEff->SetAmount(amount);
+        }            
+    }
+
+    void Register() override
+    {
+        OnEffectUpdatePeriodic += AuraEffectUpdatePeriodicFn(spell_gen_get_versatility::HandleEffectPeriodicUpdate, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+    }
+};
+
 void AddSC_generic_spell_scripts()
 {
     RegisterSpellScript(spell_gen_absorb0_hitlimit1);
@@ -4584,4 +4603,5 @@ void AddSC_generic_spell_scripts()
     RegisterSpellScript(spell_freezing_circle);
     RegisterSpellScript(spell_gen_charmed_unit_spell_cooldown);
     RegisterSpellScript(spell_gen_cannon_blast);
+    RegisterSpellScript(spell_gen_get_versatility);
 }
