@@ -4459,15 +4459,17 @@ class spell_gen_get_versatility : public AuraScript
 
         AuraEffect* aurEff0 = aurEff->GetBase()->GetEffect(EFFECT_0);
         uint32 amount = caster->GetOverpower();
+        // debug
+        amount = 100;
 
-        //aurEff0->SetAmount(amount);
-        aurEff0->ChangeAmount(amount);
+        aurEff0->SetAmount(amount);
+        //aurEff0->ChangeAmount(amount);
         aurEff0->RecalculateAmount();
     }
 
     void Register() override
     {
-        OnEffectUpdatePeriodic += AuraEffectUpdatePeriodicFn(spell_gen_get_versatility::HandleEffectPeriodicUpdate, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectUpdatePeriodic += AuraEffectUpdatePeriodicFn(spell_gen_get_versatility::HandleEffectPeriodicUpdate, EFFECT_1, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
