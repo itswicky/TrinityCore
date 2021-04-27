@@ -4457,10 +4457,12 @@ class spell_gen_get_versatility : public AuraScript
         if (!caster)
             return;
 
+        AuraEffect* aurEff0 = aurEff->GetBase()->GetEffect(EFFECT_0);
         uint32 amount = caster->GetOverpower();
-        //aurEff->SetAmount(amount);
-        aurEff->ChangeAmount(amount);
-        aurEff->RecalculateAmount();
+
+        //aurEff0->SetAmount(amount);
+        aurEff0->ChangeAmount(amount);
+        aurEff0->RecalculateAmount();
     }
 
     void Register() override

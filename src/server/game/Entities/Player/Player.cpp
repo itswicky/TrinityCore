@@ -466,7 +466,7 @@ void Player::ChangeOverpower(int32 value, bool apply)
     if (apply)
         m_overpower += value;
     else
-        m_overpower += value;
+        m_overpower -= value;
 }
 
 bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo)
