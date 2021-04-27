@@ -4453,13 +4453,14 @@ class spell_gen_get_versatility : public AuraScript
 
     void HandleEffectPeriodicUpdate(AuraEffect* aurEff)
     {
-        if (Player* target = GetTarget()->ToPlayer())
-        {
-            uint32 amount = target->GetOverpower();
-            aurEff->SetAmount(amount);
-            // debug
-            target->GetSession()->SendNotification("debug text");
-        }            
+        Player* caster = GetCaster()->ToPlayer();
+        if (!caster)
+            return;
+
+        uint32 amount = caster->GetOverpower();
+        aurEff->SetAmount(amount);
+        // debug
+        caster->GetSession()->SendNotification("debug text");  
     }
 
     void Register() override
