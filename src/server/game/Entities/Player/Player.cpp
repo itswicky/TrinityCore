@@ -471,46 +471,102 @@ void Player::ChangeOverpower(int32 value, bool apply)
 
 enum VersatilityAuras
 {
-    VERS_DRUID      = 1,
-    VERS_HUNTER     = 2,
-    VERS_MAGE       = 3,
-    VERS_PALADIN    = 81021,
-    VERS_PRIEST     = 4,
-    VERS_ROGUE      = 5,
-    VERS_SHAMAN     = 6,
-    VERS_WARLOCK    = 7,
-    VERS_WARRIOR    = 8
+    VERS_DRUID      = 81021,
+    VERS_HUNTER     = 81023,
+    VERS_MAGE       = 81025,
+    VERS_PALADIN    = 81027,
+    VERS_PRIEST     = 81029,
+    VERS_ROGUE      = 81031,
+    VERS_SHAMAN     = 81033,
+    VERS_WARLOCK    = 81035,
+    VERS_WARRIOR    = 81037
 };
 
 void Player::UpdateOverpower(uint32 amount)
 {
-    RemoveAurasDueToSpell(81021);
-
     switch (GetClass())
     {
     case CLASS_DRUID:
+    {
+        RemoveAurasDueToSpell(VERS_DRUID);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, VERS_DRUID, args);
         break;
+    }
     case CLASS_HUNTER:
+    {
+        RemoveAurasDueToSpell(VERS_HUNTER);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, VERS_HUNTER, args);
         break;
+    }
     case CLASS_MAGE:
+    {
+        RemoveAurasDueToSpell(VERS_MAGE);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, VERS_MAGE, args);
         break;
+    }
     case CLASS_PALADIN:
     {
+        RemoveAurasDueToSpell(VERS_PALADIN);
+
         CastSpellExtraArgs args(EFFECT_0);
         args.AddSpellBP0(amount);
         CastSpell(this, VERS_PALADIN, args);
         break;
     }
     case CLASS_PRIEST:
+    {
+        RemoveAurasDueToSpell(VERS_PRIEST);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, VERS_PRIEST, args);
         break;
+    }
     case CLASS_ROGUE:
+    {
+        RemoveAurasDueToSpell(VERS_ROGUE);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, VERS_ROGUE, args);
         break;
+    }
     case CLASS_SHAMAN:
+    {
+        RemoveAurasDueToSpell(VERS_SHAMAN);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, VERS_SHAMAN, args);
         break;
+    }
     case CLASS_WARLOCK:
+    {
+        RemoveAurasDueToSpell(VERS_WARLOCK);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, VERS_WARLOCK, args);
         break;
+    }
     case CLASS_WARRIOR:
+    {
+        RemoveAurasDueToSpell(VERS_WARRIOR);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, VERS_WARRIOR, args);
         break;
+    }
     default:
         break;
     }
