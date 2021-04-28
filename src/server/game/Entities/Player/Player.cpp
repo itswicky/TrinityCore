@@ -469,6 +469,15 @@ void Player::ChangeOverpower(int32 value, bool apply)
         m_overpower -= value;
 }
 
+void Player::UpdateOverpower(uint32 amount)
+{
+    RemoveAurasDueToSpell(81020);
+
+    CastSpellExtraArgs args(EFFECT_0);
+    args.AddSpellBP0(amount);
+    CastSpell(this, 81020, args);
+}
+
 bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo)
 {
     //FIXME: outfitId not used in player creating
@@ -12162,6 +12171,7 @@ Item* Player::EquipItem(uint16 pos, Item* pItem, bool update)
                 AddItemsSetItem(this, pItem);
 
             _ApplyItemMods(pItem, slot, true);
+            UpdateOverpower(m_overpower);
 
             if (pProto && IsInCombat() && (pProto->Class == ITEM_CLASS_WEAPON || pProto->InventoryType == INVTYPE_RELIC) && m_weaponChangeTimer == 0)
             {
@@ -12345,6 +12355,7 @@ void Player::RemoveItem(uint8 bag, uint8 slot, bool update)
                     RemoveItemsSetItem(this, pProto);
 
                 _ApplyItemMods(pItem, slot, false, update);
+                UpdateOverpower(m_overpower);
 
                 // remove item dependent auras and casts (only weapon and armor slots)
                 if (slot < EQUIPMENT_SLOT_END)
