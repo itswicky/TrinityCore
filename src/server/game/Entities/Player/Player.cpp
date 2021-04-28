@@ -471,6 +471,8 @@ void Player::ChangeOverpower(int32 value, bool apply)
 
 void Player::UpdateOverpower(uint32 amount)
 {
+    GetSession()->SendNotification("UpdateOverpower debug");
+
     RemoveAurasDueToSpell(81020);
 
     CastSpellExtraArgs args(EFFECT_0);
