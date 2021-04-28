@@ -469,15 +469,51 @@ void Player::ChangeOverpower(int32 value, bool apply)
         m_overpower -= value;
 }
 
+enum VersatilityAuras
+{
+    VERS_DRUID      = 1,
+    VERS_HUNTER     = 2,
+    VERS_MAGE       = 3,
+    VERS_PALADIN    = 81021,
+    VERS_PRIEST     = 4,
+    VERS_ROGUE      = 5,
+    VERS_SHAMAN     = 6,
+    VERS_WARLOCK    = 7,
+    VERS_WARRIOR    = 8
+};
+
 void Player::UpdateOverpower(uint32 amount)
 {
-    GetSession()->SendNotification("UpdateOverpower debug");
+    RemoveAurasDueToSpell(81021);
 
-    RemoveAurasDueToSpell(81020);
-
-    CastSpellExtraArgs args(EFFECT_0);
-    args.AddSpellBP0(amount);
-    CastSpell(this, 81020, args);
+    switch (GetClass())
+    {
+    case CLASS_DRUID:
+        break;
+    case CLASS_HUNTER:
+        break;
+    case CLASS_MAGE:
+        break;
+    case CLASS_PALADIN:
+    {
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, VERS_PALADIN, args);
+        break;
+    }
+    case CLASS_PRIEST:
+        break;
+    case CLASS_ROGUE:
+        break;
+    case CLASS_SHAMAN:
+        break;
+    case CLASS_WARLOCK:
+        break;
+    case CLASS_WARRIOR:
+        break;
+    default:
+        break;
+    }
 }
 
 bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo)
