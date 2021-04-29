@@ -5171,9 +5171,9 @@ void AuraEffect::HandlePeriodicDamageAurasTick(Unit* target, Unit* caster) const
     damage = dmg;
 
     // Versatility
-    if (caster->GetTypeId() == TYPEID_PLAYER && target->GetTypeId() == TYPEID_UNIT) // Player deals damage to Unit
+    if (caster->GetTypeId() == TYPEID_PLAYER) // Player deals damage to any target
     {
-        float mod = 1 / caster->ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
+        float mod = caster->ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
         AddPct(dmg, mod * caster->ToPlayer()->GetVersatility());
     }
 
@@ -5378,6 +5378,13 @@ void AuraEffect::HandlePeriodicHealAurasTick(Unit* target, Unit* caster) const
         GetCasterGUID().ToString().c_str(), target->GetGUID().ToString().c_str(), damage, GetId());
 
     uint32 heal = damage;
+
+    // Versatility
+    if (caster->GetTypeId() == TYPEID_PLAYER) // Player deals damage to any target
+    {
+        float mod = caster->ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
+        AddPct(heal, mod * caster->ToPlayer()->GetVersatility());
+    }
 
     HealInfo healInfo(caster, target, damage, GetSpellInfo(), GetSpellInfo()->GetSchoolMask());
     Unit::CalcHealAbsorb(healInfo);
