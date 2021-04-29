@@ -1043,10 +1043,12 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage* damageInfo, int32 dama
                 if (CanApplyResilience())
                     Unit::ApplyResilience(victim, nullptr, &damage, crit, (attackType == RANGED_ATTACK ? CR_CRIT_TAKEN_RANGED : CR_CRIT_TAKEN_MELEE));
 
-                // Overpower
-                else if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT)
-                    AddPct(damage, 0.1f * ToPlayer()->GetOverpower());
-
+                // Versatility
+                if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT) // Player deals damage to Unit
+                {
+                    float mod = 1 / ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtOCTClassCombatRatingScalar.dbc
+                    AddPct(damage, mod * ToPlayer()->GetVersatility());
+                }
                 break;
             }
             // Magical Attacks
@@ -1068,7 +1070,10 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage* damageInfo, int32 dama
                     if (victim->GetTypeId() == TYPEID_PLAYER)
                         break;
                     else
-                        AddPct(damage, 0.1f * ToPlayer()->GetOverpower());
+                    {
+                        float mod = 1 / ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtOCTClassCombatRatingScalar.dbc
+                        AddPct(damage, mod * ToPlayer()->GetVersatility());
+                    }
                 }
 
                 break;
@@ -1383,14 +1388,17 @@ void Unit::CalculateMeleeDamage(Unit* victim, CalcDamageInfo* damageInfo, Weapon
         damageInfo->Damages[i].Damage -= resilienceReduction;
         damageInfo->CleanDamage += resilienceReduction;
 
-        // Overpower
-        int32 pvePowerReduction = damageInfo->Damages[i].Damage;
+        // Versatility
+        int32 versMod = damageInfo->Damages[i].Damage;
         if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT)
-            AddPct(pvePowerReduction, 0.1f * ToPlayer()->GetOverpower());
+        {
+            float mod = 1 / ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtOCTClassCombatRatingScalar.dbc
+            AddPct(versMod, mod * ToPlayer()->GetVersatility());
+        }
 
-        pvePowerReduction = damageInfo->Damages[i].Damage - pvePowerReduction;
-        damageInfo->Damages[i].Damage -= pvePowerReduction;
-        damageInfo->CleanDamage += pvePowerReduction;
+        versMod = damageInfo->Damages[i].Damage - versMod;
+        damageInfo->Damages[i].Damage -= versMod;
+        damageInfo->CleanDamage += versMod;
 
         // Calculate absorb resist
         if (int32(damageInfo->Damages[i].Damage) > 0)

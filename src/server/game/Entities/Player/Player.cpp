@@ -408,7 +408,7 @@ Player::Player(WorldSession* session): Unit(true)
 
     m_groupUpdateTimer.Reset(5000);
 
-    m_overpower = 0;
+    m_versatility = 0;
 }
 
 Player::~Player()
@@ -461,12 +461,12 @@ void Player::CleanupsBeforeDelete(bool finalCleanup)
             itr->second.save->RemovePlayer(this);
 }
 
-void Player::ChangeOverpower(int32 value, bool apply)
+void Player::ChangeVersatility(int32 value, bool apply)
 {
     if (apply)
-        m_overpower += value;
+        m_versatility += value;
     else
-        m_overpower -= value;
+        m_versatility -= value;
 }
 
 enum VersatilityAuras
@@ -482,7 +482,7 @@ enum VersatilityAuras
     VERS_WARRIOR    = 81037
 };
 
-void Player::UpdateOverpower(uint32 amount)
+void Player::UpdateVersatility(uint32 amount)
 {
     switch (GetClass())
     {
@@ -7558,7 +7558,7 @@ void Player::_ApplyItemBonuses(ItemTemplate const* proto, uint8 slot, bool apply
                 ApplyRatingMod(CR_CRIT_SPELL, int32(val), apply);
                 break;
             case ITEM_MOD_HIT_TAKEN_MELEE_RATING:                       
-                ChangeOverpower(int32(val), apply);  // ApplyRatingMod(CR_HIT_TAKEN_MELEE, int32(val), apply);
+                ChangeVersatility(int32(val), apply);  // ApplyRatingMod(CR_HIT_TAKEN_MELEE, int32(val), apply);
                 break;
             case ITEM_MOD_HIT_TAKEN_RANGED_RATING:
                 ApplyRatingMod(CR_HIT_TAKEN_RANGED, int32(val), apply);
@@ -12265,7 +12265,7 @@ Item* Player::EquipItem(uint16 pos, Item* pItem, bool update)
                 AddItemsSetItem(this, pItem);
 
             _ApplyItemMods(pItem, slot, true);
-            UpdateOverpower(m_overpower);
+            UpdateVersatility(m_versatility);
 
             if (pProto && IsInCombat() && (pProto->Class == ITEM_CLASS_WEAPON || pProto->InventoryType == INVTYPE_RELIC) && m_weaponChangeTimer == 0)
             {
@@ -12449,7 +12449,7 @@ void Player::RemoveItem(uint8 bag, uint8 slot, bool update)
                     RemoveItemsSetItem(this, pProto);
 
                 _ApplyItemMods(pItem, slot, false, update);
-                UpdateOverpower(m_overpower);
+                UpdateVersatility(m_versatility);
 
                 // remove item dependent auras and casts (only weapon and armor slots)
                 if (slot < EQUIPMENT_SLOT_END)
