@@ -1049,6 +1049,18 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage* damageInfo, int32 dama
                     float mod = ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
                     AddPct(damage, mod * ToPlayer()->GetVersatility());
                 }
+
+                // Overpower
+                if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT)  // Player deals damage to non-player targets
+                {
+                    float mod = 100 * ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_RANGED); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
+                    if (mod > 9999)
+                        mod = 9999;
+                    float chance = urand(0, 9999);
+
+                    if (mod >= chance)
+                        damage *= 2;
+                }
                 break;
             }
             // Magical Attacks
@@ -1072,6 +1084,17 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage* damageInfo, int32 dama
                         AddPct(damage, mod * ToPlayer()->GetVersatility());
                 }
 
+                // Overpower
+                if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT)  // Player deals damage to non-player targets
+                {
+                    float mod = 100 * ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_RANGED); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
+                    if (mod > 9999)
+                        mod = 9999;
+                    float chance = urand(0, 9999);
+
+                    if (mod >= chance)
+                        damage *= 2;
+                }
                 break;
             }
             default:
@@ -1390,6 +1413,18 @@ void Unit::CalculateMeleeDamage(Unit* victim, CalcDamageInfo* damageInfo, Weapon
         {
             float mod = ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
             AddPct(versMod, mod * ToPlayer()->GetVersatility());
+        }
+
+        // Overpower
+        if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT)  // Player deals damage to non-player targets
+        {
+            float mod = 100 * ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_RANGED); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
+            if (mod > 9999)
+                mod = 9999;
+            float chance = urand(0, 9999);
+
+            if (mod >= chance)
+                versMod *= 2;
         }
 
         versMod = damageInfo->Damages[i].Damage - versMod;

@@ -409,6 +409,7 @@ Player::Player(WorldSession* session): Unit(true)
     m_groupUpdateTimer.Reset(5000);
 
     m_versatility = 0;
+    m_overpower = 0;
 }
 
 Player::~Player()
@@ -565,6 +566,117 @@ void Player::UpdateVersatility(uint32 amount)
         CastSpellExtraArgs args(EFFECT_0);
         args.AddSpellBP0(amount);
         CastSpell(this, VERS_WARRIOR, args);
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void Player::ChangeOverpower(int32 value, bool apply)
+{
+    if (apply)
+        m_versatility += value;
+    else
+        m_versatility -= value;
+}
+
+enum OverpowerAuras
+{
+    OVER_DRUID      = 81039,
+    OVER_HUNTER     = 81041,
+    OVER_MAGE       = 81043,
+    OVER_PALADIN    = 81045,
+    OVER_PRIEST     = 81047,
+    OVER_ROGUE      = 81049,
+    OVER_SHAMAN     = 81051,
+    OVER_WARLOCK    = 81053,
+    OVER_WARRIOR    = 81055
+};
+
+void Player::UpdateOverpower(uint32 amount)
+{
+    switch (GetClass())
+    {
+    case CLASS_DRUID:
+    {
+        RemoveAurasDueToSpell(OVER_DRUID);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, OVER_DRUID, args);
+        break;
+    }
+    case CLASS_HUNTER:
+    {
+        RemoveAurasDueToSpell(OVER_HUNTER);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, OVER_HUNTER, args);
+        break;
+    }
+    case CLASS_MAGE:
+    {
+        RemoveAurasDueToSpell(OVER_MAGE);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, OVER_MAGE, args);
+        break;
+    }
+    case CLASS_PALADIN:
+    {
+        RemoveAurasDueToSpell(OVER_PALADIN);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, OVER_PALADIN, args);
+        break;
+    }
+    case CLASS_PRIEST:
+    {
+        RemoveAurasDueToSpell(OVER_PRIEST);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, OVER_PRIEST, args);
+        break;
+    }
+    case CLASS_ROGUE:
+    {
+        RemoveAurasDueToSpell(OVER_ROGUE);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, OVER_ROGUE, args);
+        break;
+    }
+    case CLASS_SHAMAN:
+    {
+        RemoveAurasDueToSpell(OVER_SHAMAN);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, OVER_SHAMAN, args);
+        break;
+    }
+    case CLASS_WARLOCK:
+    {
+        RemoveAurasDueToSpell(OVER_WARLOCK);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, OVER_WARLOCK, args);
+        break;
+    }
+    case CLASS_WARRIOR:
+    {
+        RemoveAurasDueToSpell(OVER_WARRIOR);
+
+        CastSpellExtraArgs args(EFFECT_0);
+        args.AddSpellBP0(amount);
+        CastSpell(this, OVER_WARRIOR, args);
         break;
     }
     default:
@@ -7558,10 +7670,10 @@ void Player::_ApplyItemBonuses(ItemTemplate const* proto, uint8 slot, bool apply
                 ApplyRatingMod(CR_CRIT_SPELL, int32(val), apply);
                 break;
             case ITEM_MOD_HIT_TAKEN_MELEE_RATING:                       
-                ChangeVersatility(int32(val), apply);  // ApplyRatingMod(CR_HIT_TAKEN_MELEE, int32(val), apply);
+                ChangeVersatility(int32(val), apply);   // ApplyRatingMod(CR_HIT_TAKEN_MELEE, int32(val), apply);
                 break;
             case ITEM_MOD_HIT_TAKEN_RANGED_RATING:
-                ApplyRatingMod(CR_HIT_TAKEN_RANGED, int32(val), apply);
+                ChangeOverpower(int32(val), apply);     //ApplyRatingMod(CR_HIT_TAKEN_RANGED, int32(val), apply);
                 break;
             case ITEM_MOD_HIT_TAKEN_SPELL_RATING:
                 ApplyRatingMod(CR_HIT_TAKEN_SPELL, int32(val), apply);
@@ -12266,6 +12378,7 @@ Item* Player::EquipItem(uint16 pos, Item* pItem, bool update)
 
             _ApplyItemMods(pItem, slot, true);
             UpdateVersatility(m_versatility);
+            UpdateOverpower(m_overpower);
 
             if (pProto && IsInCombat() && (pProto->Class == ITEM_CLASS_WEAPON || pProto->InventoryType == INVTYPE_RELIC) && m_weaponChangeTimer == 0)
             {
@@ -12450,6 +12563,7 @@ void Player::RemoveItem(uint8 bag, uint8 slot, bool update)
 
                 _ApplyItemMods(pItem, slot, false, update);
                 UpdateVersatility(m_versatility);
+                UpdateOverpower(m_overpower);
 
                 // remove item dependent auras and casts (only weapon and armor slots)
                 if (slot < EQUIPMENT_SLOT_END)

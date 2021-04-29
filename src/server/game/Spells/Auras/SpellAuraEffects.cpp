@@ -5177,6 +5177,18 @@ void AuraEffect::HandlePeriodicDamageAurasTick(Unit* target, Unit* caster) const
         AddPct(dmg, mod * caster->ToPlayer()->GetVersatility());
     }
 
+    // Overpower
+    if (caster->GetTypeId() == TYPEID_PLAYER && target->GetTypeId() == TYPEID_UNIT)  // Player deals damage to non-player targets
+    {
+        float mod = 100 * caster->ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_RANGED); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
+        if (mod > 9999)
+            mod = 9999;
+        float chance = urand(0, 9999);
+
+        if (mod >= chance)
+            damage *= 2;
+    }
+
     DamageInfo damageInfo(caster, target, damage, GetSpellInfo(), GetSpellInfo()->GetSchoolMask(), DOT, BASE_ATTACK);
     Unit::CalcAbsorbResist(damageInfo);
     damage = damageInfo.GetDamage();
