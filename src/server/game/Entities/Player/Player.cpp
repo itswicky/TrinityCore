@@ -576,9 +576,9 @@ void Player::UpdateVersatility(uint32 amount)
 void Player::ChangeOverpower(int32 value, bool apply)
 {
     if (apply)
-        m_versatility += value;
+        m_overpower += value;
     else
-        m_versatility -= value;
+        m_overpower -= value;
 }
 
 enum OverpowerAuras
