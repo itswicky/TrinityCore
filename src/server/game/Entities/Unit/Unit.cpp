@@ -1053,12 +1053,9 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage* damageInfo, int32 dama
                 // Overpower
                 if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT)  // Player deals damage to non-player targets
                 {
-                    float mod = 100 * ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_RANGED); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
-                    if (mod > 9999)
-                        mod = 9999;
-                    float chance = urand(0, 9999);
+                    float mod = ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_RANGED); // Pull CR_HIT_TAKEN_RANGED value from gtCombatRatings.dbc
 
-                    if (mod >= chance)
+                    if (mod >= rand_chance())
                         damage *= 2;
                 }
                 break;
@@ -1087,12 +1084,9 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage* damageInfo, int32 dama
                 // Overpower
                 if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT)  // Player deals damage to non-player targets
                 {
-                    float mod = 100 * ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_RANGED); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
-                    if (mod > 9999)
-                        mod = 9999;
-                    float chance = urand(0, 9999);
+                    float mod = ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_RANGED); // Pull CR_HIT_TAKEN_RANGED value from gtCombatRatings.dbc
 
-                    if (mod >= chance)
+                    if (mod >= rand_chance())
                         damage *= 2;
                 }
                 break;
@@ -1418,12 +1412,9 @@ void Unit::CalculateMeleeDamage(Unit* victim, CalcDamageInfo* damageInfo, Weapon
         // Overpower
         if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT)  // Player deals damage to non-player targets
         {
-            float mod = 100 * ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_RANGED); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
-            if (mod > 9999)
-                mod = 9999;
-            float chance = urand(0, 9999);
+            float mod = ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_RANGED); // Pull CR_HIT_TAKEN_RANGED value from gtCombatRatings.dbc
 
-            if (mod >= chance)
+            if (mod >= rand_chance())
                 versMod *= 2;
         }
 
