@@ -920,6 +920,13 @@ class spell_pri_power_word_shield_aura : public AuraScript
                 AddPct(amount, auraStrengthOfWrynn->GetAmount());
             else if (AuraEffect const* auraHellscreamsWarsong = caster->GetAuraEffect(SPELL_AURA_MOD_HEALING_DONE_PERCENT, SPELLFAMILY_GENERIC, SPELL_ICON_ID_HELLSCREAM_WARSONG, EFFECT_2))
                 AddPct(amount, auraHellscreamsWarsong->GetAmount());
+
+            // Versatility
+            if (caster->ToPlayer()->GetVersatility() > 0)
+            {
+                float mod = caster->ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
+                AddPct(amount, mod * caster->ToPlayer()->GetVersatility());
+            }
         }
     }
 
