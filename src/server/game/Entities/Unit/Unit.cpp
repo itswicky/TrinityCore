@@ -1046,7 +1046,7 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage* damageInfo, int32 dama
                 // Versatility
                 if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT) // Player deals damage to Unit
                 {
-                    float mod = 1 / ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtOCTClassCombatRatingScalar.dbc
+                    float mod = 1 / ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
                     AddPct(damage, mod * ToPlayer()->GetVersatility());
                 }
                 break;
@@ -1071,7 +1071,7 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage* damageInfo, int32 dama
                         break;
                     else
                     {
-                        float mod = 1 / ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtOCTClassCombatRatingScalar.dbc
+                        float mod = 1 / ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
                         AddPct(damage, mod * ToPlayer()->GetVersatility());
                     }
                 }
@@ -1392,7 +1392,7 @@ void Unit::CalculateMeleeDamage(Unit* victim, CalcDamageInfo* damageInfo, Weapon
         int32 versMod = damageInfo->Damages[i].Damage;
         if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT)
         {
-            float mod = 1 / ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtOCTClassCombatRatingScalar.dbc
+            float mod = 1 / ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_MELEE); // Pull CR_HIT_TAKEN_MELEE value from gtCombatRatings.dbc
             AddPct(versMod, mod * ToPlayer()->GetVersatility());
         }
 
