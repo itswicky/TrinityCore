@@ -5181,8 +5181,10 @@ void AuraEffect::HandlePeriodicDamageAurasTick(Unit* target, Unit* caster) const
     if (caster->GetTypeId() == TYPEID_PLAYER && target->GetTypeId() == TYPEID_UNIT)  // Player deals damage to non-player targets
     {
         float mod = caster->ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_RANGED); // Pull CR_HIT_TAKEN_RANGED value from gtCombatRatings.dbc
+        uint32 overpowerRating = caster->ToPlayer()->GetOverpower();
+        float roll = rand_chance();
 
-        if (mod >= rand_chance())
+        if ((mod * overpowerRating) >= roll)
             damage *= 2;
     }
 

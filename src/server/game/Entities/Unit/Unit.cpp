@@ -1054,8 +1054,10 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage* damageInfo, int32 dama
                 if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT)  // Player deals damage to non-player targets
                 {
                     float mod = ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_RANGED); // Pull CR_HIT_TAKEN_RANGED value from gtCombatRatings.dbc
+                    uint32 overpowerRating = ToPlayer()->GetOverpower();
+                    float roll = rand_chance();
 
-                    if (mod >= rand_chance())
+                    if ((mod * overpowerRating) >= roll)
                         damage *= 2;
                 }
                 break;
@@ -1085,8 +1087,10 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage* damageInfo, int32 dama
                 if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT)  // Player deals damage to non-player targets
                 {
                     float mod = ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_RANGED); // Pull CR_HIT_TAKEN_RANGED value from gtCombatRatings.dbc
+                    uint32 overpowerRating = ToPlayer()->GetOverpower();
+                    float roll = rand_chance();
 
-                    if (mod >= rand_chance())
+                    if ((mod * overpowerRating) >= roll)
                         damage *= 2;
                 }
                 break;
@@ -1413,8 +1417,10 @@ void Unit::CalculateMeleeDamage(Unit* victim, CalcDamageInfo* damageInfo, Weapon
         if (GetTypeId() == TYPEID_PLAYER && victim->GetTypeId() == TYPEID_UNIT)  // Player deals damage to non-player targets
         {
             float mod = ToPlayer()->GetRatingMultiplier(CR_HIT_TAKEN_RANGED); // Pull CR_HIT_TAKEN_RANGED value from gtCombatRatings.dbc
+            uint32 overpowerRating = ToPlayer()->GetOverpower();
+            float roll = rand_chance();
 
-            if (mod >= rand_chance())
+            if ((mod * overpowerRating) >= roll)
                 versMod *= 2;
         }
 
